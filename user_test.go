@@ -8,7 +8,7 @@ import (
 
 func TestCreateUser(t *testing.T) {
 	db, tearDown := getTestDB(t)
-	defer tearDown()
+	defer t.Cleanup(tearDown)
 
 	wantName := "Evanson Mwangi"
 	wantEmail := "parish@github.io"
