@@ -11,3 +11,6 @@ prod-up:
 
 prod-down:
 	@docker-compose -f prod.docker-compose.yml down
+
+tests:
+	@go test -v ./...
