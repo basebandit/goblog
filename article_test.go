@@ -10,7 +10,7 @@ import (
 
 func TestCreateArticle(t *testing.T) {
 	db, tearDown := getTestDB(t)
-	t.Cleanup(tearDown)
+	defer t.Cleanup(tearDown)
 
 	article := goblog.Article{
 		Title:       "This is test article",
@@ -43,4 +43,12 @@ func TestCreateArticle(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	a2, err := goblog.GetArticleByTitle(ctx, db, *ua.Title)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if a2.Title != *ua.Title {
+		t.Fatalf("want title %s, got %s", a1.Title, *ua.Title)
+	}
 }
