@@ -74,7 +74,7 @@ func CreateArticle(ctx context.Context, db *sqlx.DB, a *Article, userID string) 
 
 	const q = `insert into articles (id,author,title,slug,body,description,created_at) values ($1,$2,$3,$4,$5,$6,$7)`
 
-	if _, err := db.ExecContext(ctx, q, articleID, userID, a.Title, article.Slug, article.Body, article.Description, article.CreatedAt); err != nil {
+	if _, err := db.ExecContext(ctx, q, articleID, userID, article.Title, article.Slug, article.Body, article.Description, article.CreatedAt); err != nil {
 		return Article{}, errors.Wrap(err, "inserting article")
 	}
 
