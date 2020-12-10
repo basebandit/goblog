@@ -63,3 +63,17 @@ func GetUserByEmail(ctx context.Context, db *sqlx.DB, email string) (User, error
 
 	return u, nil
 }
+
+//GetUserByName retrieves a user by name
+func GetUserByName(ctx context.Context, db *sqlx.DB, name string) (User, error) {
+	const q = `select id,name,email from users where name=$1`
+
+	var u User
+	if err := db.GetContext(ctx, &u, q, name); err != nil {
+		if err != sql.ErrNoRows {
+			return User{}, errors.New("not found")
+		}
+		return User{}, errors.Wrapf(err, "selecting user %q", name)
+	}
+	return u, nil
+}
