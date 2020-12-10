@@ -51,4 +51,18 @@ func TestCreateArticle(t *testing.T) {
 	if a2.Title != *ua.Title {
 		t.Fatalf("want title %s, got %s", a1.Title, *ua.Title)
 	}
+
+	if err = goblog.DeleteArticleByTitle(ctx, db, *ua.Title); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = goblog.GetArticleByTitle(ctx, db, *ua.Title)
+
+	if err != nil {
+		if err.Error() != "article not found" {
+			t.Fatalf("want error: article not found, got %v", err)
+		}
+	} else {
+		t.Fatalf("want error, got %v", err)
+	}
 }
