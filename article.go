@@ -88,7 +88,7 @@ func GetArticleByTitle(ctx context.Context, db *sqlx.DB, title string) (Article,
 	var a Article
 	if err := db.GetContext(ctx, &a, q, title); err != nil {
 		if err == sql.ErrNoRows {
-			return Article{}, errors.New("not found")
+			return Article{}, errors.New("article not found")
 		}
 		return Article{}, errors.Wrapf(err, "selecting article %q", title)
 	}
@@ -121,6 +121,17 @@ func UpdateArticleByID(ctx context.Context, db *sqlx.DB, id string, ua UpdateArt
 
 	if _, err := db.ExecContext(ctx, q, id, a.Title, a.Body, a.Description, time.Now()); err != nil {
 		return errors.Wrap(err, "updating user")
+	}
+
+	return nil
+}
+
+//DeleteArticleByTitle deletes an article. Note the query does not cascade to the owner of the foreign key.
+func DeleteArticleByTitle(ctx context.Context, db *sqlx.DB, title string) error {
+	const q = `delete from articles where title=$1`
+
+	if _, err := db.ExecContext(ctx, q, title); err != nil {
+		return errors.Wrap(err, "deleting article")
 	}
 
 	return nil
